@@ -6,7 +6,7 @@ from PIL import Image
 cv2.namedWindow("threshold", cv2.WINDOW_NORMAL)
 
 
-img = cv2.imread("/home/rohit/Pictures/vlcsnap-2019-01-25-22h47m45s335.png")
+img = cv2.imread("/home/rohit/Pictures/vlcsnap-2019-01-25-22h47m50s606.png")
 img = img[304:440,1067:1333,:]
 # img = cv2.bilateralFilter(orig,10,100,100)
 # img = cv2.GaussianBlur(img,(5,5),0)
@@ -14,9 +14,10 @@ img = img[304:440,1067:1333,:]
 # cv2.namedWindow("original",cv2.WINDOW_NORMAL)
 # cv2.imshow("original",img)
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-ret2,frame_threshold = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+ret2,frame_threshold = cv2.threshold(gray,0,250,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
 # Try to use DRGB colorspace, if not do it only for black
-# 
+
 cv2.imshow("threshold", frame_threshold)
 
 # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,2)) 
@@ -47,6 +48,7 @@ print( approxs[1] )
 # 		cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
 # 		bboxs.append([x,y,w,h])
 
+# Try to use DRGB colorspace, if not do it only for black
 
 print(pytesseract.image_to_string(frame_threshold))
 # x,y,w,h = bboxs[2]
