@@ -25,9 +25,10 @@ while(True):
 	i = 0
 	for cnt in cnts:
 		x,y,w,h = cv2.boundingRect(cnt)
-		if h <= 100 and w <= 400 and 5000>h*w>500 :	# Use distance and size information
+		if h <= 100 and w <= 400 and 7000>h*w>800 :	# Use distance and size information
 			i+=1
 			cv2.rectangle(img,(x,y),(x+w+4,y+h+4),(0,255,0),2)
+			
 	print(i)
 	cv2.imshow('morphed', frame_morphed)
 	cv2.imshow("countour",img)
