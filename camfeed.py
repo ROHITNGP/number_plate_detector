@@ -4,7 +4,7 @@ from PIL import Image
 import numpy as np
 
 cap = cv2.VideoCapture(0)
-
+plate = np.zeros((100,100))
 while(True):
 	ret, img = cap.read()
 	copy = img
@@ -26,15 +26,26 @@ while(True):
 	for cnt in cnts:
 		x,y,w,h = cv2.boundingRect(cnt)
 		if h <= 100 and w <= 400 and 7000>h*w>800 :	# Use distance and size information
-			i+=1
-			cv2.rectangle(img,(x,y),(x+w+4,y+h+4),(0,255,0),2)
 			
-	print(i)
+			cv2.rectangle(img,(x-4,y-4),(x+w+4,y+h+4),(0,255,0),-1)
+			th = cv2.inRange(img,(0,250,0), (1,255,1) ,cv2.THRESH_BINARY)
+			c, hier = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+			for con in c:
+				x1,y1,w1,h1 = cv2.boundingRect(con)
+				if w1 >= 300:
+					i+=1
+					cv2.rectangle(copy,(x1,y1),(x1+w1,y1+h1),(255,255,0),2)
+					plate = copy[y1:y1+h1,x1:x1+w1]
+
+	print(pytesseract.image_to_string(plate))
+	
+	# print(i)
 	cv2.imshow('morphed', frame_morphed)
 	cv2.imshow("countour",img)
-	# cv2.imshow("textbox",new)
-	
-	# print(pytesseract.image_to_string(frame_morphed))
+	cv2.imshow("th",th)
+	cv2.imshow("boundind box",copy)
+	cv2.imshow("detected plate",plate)
+	# 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 
