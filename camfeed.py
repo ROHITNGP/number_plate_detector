@@ -2,12 +2,15 @@ import pytesseract
 import cv2
 from PIL import Image
 import numpy as np
+import copy
 
 cap = cv2.VideoCapture(0)
-plate = np.zeros((100,100))
+plate = np.zeros((10,10))
+plate_number_list = []
 while(True):
 	ret, img = cap.read()
-	copy = img
+	copy = cv2.copyMakeBorder(img,0,0,0,0,cv2.BORDER_REPLICATE)
+	copy2 = cv2.copyMakeBorder(img,0,0,0,0,cv2.BORDER_REPLICATE)
 	img = cv2.bilateralFilter(img,10,100,100)
 	img = cv2.GaussianBlur(img,(5,5),0)
 
@@ -32,14 +35,16 @@ while(True):
 			c, hier = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 			for con in c:
 				x1,y1,w1,h1 = cv2.boundingRect(con)
-				if w1 >= 300:
-					i+=1
+				if w1 > 300:
 					cv2.rectangle(copy,(x1,y1),(x1+w1,y1+h1),(255,255,0),2)
-					plate = copy[y1:y1+h1,x1:x1+w1]
-
-	print(pytesseract.image_to_string(plate))
+					plate = copy2[y1:y1+h1,x1:x1+w1]
 	
-	# print(i)
+	x = str(pytesseract.image_to_string(plate))
+	# print(x)			
+	if x not in plate_number_list:
+		plate_number_list.append(x)
+		print(plate_number_list)
+
 	cv2.imshow('morphed', frame_morphed)
 	cv2.imshow("countour",img)
 	cv2.imshow("th",th)
@@ -48,6 +53,5 @@ while(True):
 	# 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
-
 cap.release()
-cv2.destroyAllWindows()
+cv2.destroyAllWindows ()
