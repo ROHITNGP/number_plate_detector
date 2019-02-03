@@ -3,10 +3,12 @@ import cv2
 from PIL import Image
 import numpy as np
 import copy
+from time import gmtime, strftime
 
 cap = cv2.VideoCapture(0)
-plate = np.zeros((10,10))
+plate = np.zeros((100,100))
 plate_number_list = []
+
 while(True):
 	ret, img = cap.read()
 	copy = cv2.copyMakeBorder(img,0,0,0,0,cv2.BORDER_REPLICATE)
@@ -38,8 +40,12 @@ while(True):
 				if w1 > 300:
 					cv2.rectangle(copy,(x1,y1),(x1+w1,y1+h1),(255,255,0),2)
 					plate = copy2[y1:y1+h1,x1:x1+w1]
-	
 	x = str(pytesseract.image_to_string(plate))
+	cv2.rectangle(copy,(0,50),(350,200),(0,0,0),-1)
+	
+	cv2.putText(copy,x,(15,140),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,255),2,cv2.LINE_AA)
+	cv2.putText(copy,strftime("%Y-%m-%d, %H:%M", gmtime()),(10,100),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,255),1,cv2.LINE_AA)
+
 	# print(x)			
 	if x not in plate_number_list:
 		plate_number_list.append(x)
@@ -48,10 +54,10 @@ while(True):
 	cv2.imshow('morphed', frame_morphed)
 	cv2.imshow("countour",img)
 	cv2.imshow("th",th)
-	cv2.imshow("boundind box",copy)
 	cv2.imshow("detected plate",plate)
-	# 
+	cv2.imshow("boundind box",copy)
+
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 cap.release()
-cv2.destroyAllWindows ()
+cv2.destroyAllWindows()
