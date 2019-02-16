@@ -10,11 +10,12 @@ plate_number_list = []
 counter =0
 cv2.namedWindow(" ", cv2.WINDOW_NORMAL)
 cv2.namedWindow("draw", cv2.WINDOW_NORMAL)
+cv2.namedWindow("edges", cv2.WINDOW_NORMAL)
 while(True):
 	ret, img = cap.read()
-	cv2.imshow('frame',img)
+	# cv2.imshow('frame',img)
 	blur = cv2.GaussianBlur(img, (11,11), 0)
-	cv2.imshow("heol", blur)
+	# cv2.imshow("heol", blur)
 	gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
 	
 	edges = cv2.Canny(blur,40,80)
