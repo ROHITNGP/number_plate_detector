@@ -1,7 +1,6 @@
-import pytesseract
 import cv2
-from PIL import Image
 import numpy as np
+<<<<<<< HEAD
 from time import gmtime, strftime
 
 cap = cv2.VideoCapture("/home/rohit/Desktop/Video/VID_20190125_133435.mp4")
@@ -20,23 +19,78 @@ while(True):
 	
 	edges = cv2.Canny(blur,40,80)
 	cv2.imshow("edges", edges)
-
-	
-	cnts, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-	h,w,c = img.shape
-	drawing = np.zeros((h,w), np.uint8)
-	
-	approxs = []
-	for cnt in cnts:
-		epsilon = cv2.arcLength(cnt, True) * 0.05
-		approx = cv2.approxPolyDP(cnt, epsilon, True)
-		if len(approx) == 4: 							
-		 	if cv2.contourArea(cnt) > 2000:
-				cv2.drawContours(drawing, [approx], -1, (255,0,0), -1)
-	seg = cv2.bitwise_and(img, img, mask=drawing)
-	cv2.imshow("draw", seg)	
+=======
+from scipy.ndimage import gaussian_filter
+import matplotlib.pyplot as plt
 
 
+img = cv2.imread("sample3.jpg")
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (15,15), 0)		
+
+dx = cv2.Scharr(blur, cv2.CV_64F, 1, 0)
+dy = cv2.Scharr(blur, cv2.CV_64F, 0, 1)
+
+dx = cv2.convertScaleAbs(dx)
+dy = cv2.convertScaleAbs(dy)
+
+h,w = dx.shape
+bins = np.sum(dx,1)
+a = range(h)
+smooth = gaussian_filter(bins, sigma=5)
+
+index = h-np.argmax(smooth)+1
+print(index)
+
+
+plt.subplot(1,2,1)
+plt.imshow(img, zorder=0)
+plt.subplot(1,2,2)
+plt.plot(smooth, a[::-1], zorder=1)
+
+
+plt.show()
+
+"""cap = cv2.VideoCapture("/home/aman/Downloads/VID_20190125_133348.mp4") # "")
+
+while True:
+	ret, img = cap.read()
+	cv2.imshow('frame',img)
+>>>>>>> b89a4a3fe19ec28a3e917251839d21515439e9b6
+
+	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+	blur = cv2.GaussianBlur(gray, (15,15), 0)		
+	dx = cv2.Scharr(blur, cv2.CV_64F, 1, 0)
+	dy = cv2.Scharr(blur, cv2.CV_64F, 0, 1)
+	dx = cv2.convertScaleAbs(dx)
+	dy = cv2.convertScaleAbs(dy)
+
+	# cv2.imshow("blur", blur)
+	#
+	# edges = cv2.Canny(blur,80,160)
+	# cv2.imshow("edges", edges)
+	#
+	# im, cnts, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	# h,w,c = img.shape
+	# drawing = np.zeros((h, w), np.uint8)
+	#
+	# approxs = []
+	# for cnt in cnts:
+	# 	epsilon = cv2.arcLength(cnt, True) * 0.05
+	# 	approx = cv2.approxPolyDP(cnt, epsilon, True)
+	# 	if len(approx) == 4:
+	# 		if cv2.contourArea(cnt) > 2000:
+	# 			cv2.drawContours(drawing, [approx], -1, (255,0,0), -1)
+	# seg = cv2.bitwise_and(img, img, mask=drawing)
+	cv2.imshow("dx", dx)
+	cv2.imshow("dy", dy)
+
+	if cv2.waitKey(0) & 0xFF == ord('q'):
+		break
+
+cap.release()
+cv2.destroyAllWindows()
 
 
 
@@ -58,23 +112,19 @@ while(True):
 	# 				plate = copy2[y1:y1+h1,x1:x1+w1]
 	# counter+=1
 
-
-	"""if counter % 50 == 0:
-		# print(counter)
-		x = str(pytesseract.image_to_string(plate))
-
-	# print(x)			
-		if x not in plate_number_list:
-			plate_number_list.append(x)
-			print(plate_number_list)"""
+	#
+	# if counter % 50 == 0:
+	# 	# print(counter)
+	# 	x = str(pytesseract.image_to_string(plate))
+	#
+	# # print(x)
+	# 	if x not in plate_number_list:
+	# 		plate_number_list.append(x)
+	# 		print(plate_number_list)
 
 	# cv2.imshow('morphed', frame_morphed)
 	# cv2.imshow("countour",img)
 	# # cv2.imshow("th",th)
 	# cv2.imshow("detected plate",plate)
 	# cv2.imshow("boundind box",copy)
-
-	if cv2.waitKey(30) & 0xFF == ord('q'):
-		break
-cap.release()
-cv2.destroyAllWindows()
+"""
