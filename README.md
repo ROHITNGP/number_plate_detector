@@ -42,3 +42,4 @@ image classification. Dataset available from https://github.com/openimages, 2017
 # Team Members
 1. Rishesh Agarwal
 2. Rohit Lal
+3. Rohit Maheswari
